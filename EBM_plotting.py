@@ -672,9 +672,9 @@ for isamp in examples:
     #continue
 
     def fig_twelve(a):
-        fig, ax = plt.subplots(1,2)
+        fig, ax = plt.subplots(1,3)
 
-        for i in range(2):
+        for i in range(3):
             for spine in ['top', 'bottom', 'left', 'right']:
                 ax[i].spines[spine].set_visible(False)
             ax[i].set_xticks([])
@@ -684,18 +684,26 @@ for isamp in examples:
         min_cm = min(ebm.eval_terms(X_val).flatten())
         plot_max = max(abs(max_cm), abs(min_cm))
 
+        og_image = ax[0].imshow(original_image, cmap = 'gray', extent = (0,256,0,256), clim = (0,225))
+        cbar = plt.colorbar(og_image, ax = ax[0], location = 'bottom', fraction = 0.046, pad = 0.04)
+        cbar.set_ticks(np.linspace(0, 225, 3))
+        cbar.ax.spines['outline'].set_linewidth(0.5)
+        cbar.ax.tick_params(labelsize=15)
+        cbar.ax.set_xlabel('Reflectance',fontsize=15)
         IM = np.array(ebm.eval_terms(X_val)[:,a])
-        importance = ax[0].imshow(IM.reshape(64,64), cmap = 'seismic_r', extent = (0,64,0,64), clim = (-plot_max, plot_max))
-        cbar = plt.colorbar(importance, ax = ax[0], location = 'bottom', fraction=0.046, pad=0.04)
+        importance = ax[1].imshow(IM.reshape(64,64), cmap = 'seismic', extent = (0,64,0,64), clim = (-plot_max, plot_max))
+        cbar = plt.colorbar(importance, ax = ax[1], location = 'bottom', fraction=0.046, pad=0.04)
         cbar.ax.tick_params(labelsize=20)
+        cbar.ax.set_xlabel('Score',fontsize=15)
         #ax[0].set_title("Cool Contrast Tiles\nOriginal Feature Importance")
 
         alter_model()
 
         IM = np.array(ebm.eval_terms(X_val)[:,a]).reshape(64,64)
-        importance = ax[1].imshow(IM, cmap = 'seismic_r', extent = (0,64,0,64), clim = (-plot_max, plot_max))
-        cbar = plt.colorbar(importance, ax = ax[1], location = 'bottom', fraction=0.046, pad=0.04)
+        importance = ax[2].imshow(IM, cmap = 'seismic', extent = (0,64,0,64), clim = (-plot_max, plot_max))
+        cbar = plt.colorbar(importance, ax = ax[2], location = 'bottom', fraction=0.046, pad=0.04)
         cbar.ax.tick_params(labelsize=20)
+        cbar.ax.set_xlabel('Score',fontsize=15)
         #ax[1].set_title("Cool Contrast Tiles\nAltered Model Feature Importance")
 
         fig = plt.gcf()
